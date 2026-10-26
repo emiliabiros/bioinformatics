@@ -1,6 +1,3 @@
-import sys
-
-
 def find_motif_locations(s, t):
     locations = []
     len_s = len(s)
@@ -14,8 +11,18 @@ def find_motif_locations(s, t):
 
 
 def main():
-    input_data = sys.stdin.read().splitlines()
-    lines = [line.strip() for line in input_data if line.strip()]
+    lines = []
+    while True:
+        try:
+            line = input()
+            if not line.strip():
+                if lines:
+                    break
+                continue
+            lines.append(line.strip())
+        except EOFError:
+            break
+
     s = lines[0]
     t = lines[1]
 

@@ -1,13 +1,17 @@
-import sys
 from Bio import Entrez
 
 
 def count_genbank_entries(genus, start_date, end_date):
-    Entrez.email = "emiliab@example.com"
+    Entrez.email = "emilia.biros@student.uj.edu.pl"
 
-    term = f'"{genus}"[Organism] AND ("{start_date}"[PDAT] : "{end_date}"[PDAT])'
+    handle = Entrez.esearch(
+        db="nucleotide",
+        term=f'"{genus}"[Organism]',
+        mindate=start_date,
+        maxdate=end_date,
+        datetype="pdat",
+    )
 
-    handle = Entrez.esearch(db="nucleotide", term=term)
     record = Entrez.read(handle)
     handle.close()
 
@@ -15,8 +19,17 @@ def count_genbank_entries(genus, start_date, end_date):
 
 
 def main():
-    input_data = sys.stdin.read().splitlines()
-    lines = [line.strip() for line in input_data if line.strip()]
+    lines = []
+    while True:
+        try:
+            line = input()
+            if not line.strip():
+                if lines:
+                    break
+                continue
+            lines.append(line.strip())
+        except EOFError:
+            break
 
     genus = lines[0]
     start_date = lines[1]

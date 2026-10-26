@@ -1,12 +1,11 @@
-import sys
-
-
-def parse_fasta(content):
+def parse_fasta(lines):
     sequences = []
     current_seq = []
 
-    for line in content.splitlines():
+    for line in lines:
         line = line.strip()
+        if not line:
+            continue
         if line.startswith(">"):
             if current_seq:
                 sequences.append("".join(current_seq))
@@ -37,12 +36,23 @@ def transition_transversion_ratio(s1, s2):
     if transversions == 0:
         return float(transitions)
 
-    return transitions/transversions
+    return transitions / transversions
 
 
 def main():
-    content = sys.stdin.read()
-    sequences = parse_fasta(content)
+    lines = []
+    while True:
+        try:
+            line = input()
+            if not line.strip():
+                if lines:
+                    break
+                continue
+            lines.append(line)
+        except EOFError:
+            break
+
+    sequences = parse_fasta(lines)
 
     s1 = sequences[0]
     s2 = sequences[1]

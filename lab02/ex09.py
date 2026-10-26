@@ -1,13 +1,12 @@
-import sys
-
-
-def parse_fasta_with_ids(content):
+def parse_fasta_with_ids(lines):
     fasta_dict = {}
     current_id = None
     current_seq = []
 
-    for line in content.splitlines():
+    for line in lines:
         line = line.strip()
+        if not line:
+            continue
         if line.startswith(">"):
             if current_id:
                 fasta_dict[current_id] = "".join(current_seq)
@@ -47,8 +46,19 @@ def find_overlap_edges(fasta_dict):
 
 
 def main():
-    content = sys.stdin.read()
-    fasta_dict = parse_fasta_with_ids(content)
+    lines = []
+    while True:
+        try:
+            line = input()
+            if not line.strip():
+                if lines:
+                    break
+                continue
+            lines.append(line)
+        except EOFError:
+            break
+
+    fasta_dict = parse_fasta_with_ids(lines)
     edges = find_overlap_edges(fasta_dict)
 
     for edge in edges:

@@ -1,12 +1,11 @@
-import sys
-
-
-def parse_fasta(content):
+def parse_fasta(lines):
     sequences = []
     current_seq = []
 
-    for line in content.splitlines():
+    for line in lines:
         line = line.strip()
+        if not line:
+            continue
         if line.startswith(">"):
             if current_seq:
                 sequences.append("".join(current_seq))
@@ -37,8 +36,19 @@ def find_longest_common_substring(dna_strings):
 
 
 def main():
-    content = sys.stdin.read()
-    dna_strings = parse_fasta(content)
+    lines = []
+    while True:
+        try:
+            line = input()
+            if not line.strip():
+                if lines:
+                    break
+                continue
+            lines.append(line)
+        except EOFError:
+            break
+
+    dna_strings = parse_fasta(lines)
     result = find_longest_common_substring(dna_strings)
     print(result)
 
